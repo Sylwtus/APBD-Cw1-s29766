@@ -36,11 +36,11 @@ public class EquipmentService
     }
     public BorrowResults BorrowEquipment(int equipmentId, int userId, int days)
     {
-        var equipment = _equipments.FirstOrDefault(e => e.Id == equipmentId);
+        Equipment equipment = _equipments.FirstOrDefault(e => e.Id == equipmentId);
         if (equipment == null)
             return BorrowResults.EquipmentNotFound;
 
-        var user = _users.FirstOrDefault(u => u.Id == userId);
+        User user = _users.FirstOrDefault(u => u.Id == userId);
         if (user == null)
             return BorrowResults.UserNotFound;
 
@@ -53,14 +53,14 @@ public class EquipmentService
         int limit = user.UserType switch
         {
             UserType.Student => BusinessRules.StudentMaxRentals,
-            UserType.Employee => BusinessRules.EmployeeMaxRentals,
+            UserType.Employee => BusinessRules.EmployeeMaxRentals, 
             _ => 0
         };
 
         if (activeRentals >= limit)
             return BorrowResults.UserLimitExceeded;
 
-        var rental = new Rental
+        Rental rental = new Rental
         {
             Equipment = equipment,
             User = user,
@@ -76,7 +76,7 @@ public class EquipmentService
 
     public bool ReturnEquipment(int rentalId)
     {
-        var rental = _rentals.FirstOrDefault(r => r.RentalId == rentalId);
+        Rental rental = _rentals.FirstOrDefault(r => r.RentalId == rentalId);
 
         if (rental == null || rental.ReturnDate != null)
             return false;
@@ -112,7 +112,7 @@ public class EquipmentService
     {
         Console.WriteLine("=== RENTAL REPORT ===");
 
-        foreach (var r in _rentals)
+        foreach (Rental r in _rentals)
         {
             Console.WriteLine($"Rental ID: {r.RentalId}");
             Console.WriteLine($"User: {r.User.FName} {r.User.LName}");
