@@ -1,4 +1,5 @@
 using APBD_Cw1_s29766.Enums;
+using APBD_Cw1_s29766.Exceptions;
 
 namespace APBD_Cw1_s29766.Models;
 
@@ -12,6 +13,9 @@ public class EquipmentService
     
     public void AddEquipment(Equipment equipment)
     {
+        if (equipment == null)
+            throw new InvalidRentalOperationException("Equipment cannot be null");
+        
         equipment.Id = _nextEquipmentId++;
         equipment.IsAvailable = true;
         _equipments.Add(equipment);
@@ -27,6 +31,9 @@ public class EquipmentService
     }
     public void RegisterUser(User user)
     {
+        if (user == null)
+            throw new InvalidRentalOperationException("User cannot be null");
+        
         _users.Add(user);
     }
 
@@ -36,6 +43,8 @@ public class EquipmentService
     }
     public BorrowResults BorrowEquipment(int equipmentId, int userId, int days)
     {
+        if (days <= 0)
+            throw new InvalidRentalOperationException("Days must be greater than 0.");
         Equipment equipment = _equipments.FirstOrDefault(e => e.Id == equipmentId);
         if (equipment == null)
             return BorrowResults.EquipmentNotFound;
@@ -78,8 +87,10 @@ public class EquipmentService
     {
         Rental rental = _rentals.FirstOrDefault(r => r.RentalId == rentalId);
 
-        if (rental == null || rental.ReturnDate != null)
-            return false;
+        if (rental == null)
+            throw new RentalNotFoundException(rentalId);
+        if (rental.ReturnDate != null)
+            throw new InvalidRentalOperationException("Equipment already returned.");
 
         rental.ReturnDate = DateTime.Now;
         rental.Equipment.IsAvailable = true;
@@ -124,7 +135,7 @@ public class EquipmentService
             Console.WriteLine("");
         }
     }
-
+    
     public void PrintSummary()
     {
         Console.WriteLine("SUMMARY");
