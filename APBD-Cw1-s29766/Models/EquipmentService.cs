@@ -110,7 +110,7 @@ public class EquipmentService
     }
     public void PrintReport()
     {
-        Console.WriteLine("=== RENTAL REPORT ===");
+        Console.WriteLine("RENTAL REPORT");
 
         foreach (Rental r in _rentals)
         {
@@ -127,7 +127,7 @@ public class EquipmentService
 
     public void PrintSummary()
     {
-        Console.WriteLine("=== SUMMARY ===");
+        Console.WriteLine("SUMMARY");
 
         Console.WriteLine($"Total equipment: {_equipments.Count}");
         Console.WriteLine($"Available: {_equipments.Count(e => e.IsAvailable)}");
