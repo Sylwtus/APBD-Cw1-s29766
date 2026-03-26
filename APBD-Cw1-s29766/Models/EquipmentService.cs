@@ -119,33 +119,4 @@ public class EquipmentService
             .Where(r => r.ReturnDate == null && r.DueDate < DateTime.Now)
             .ToList();
     }
-    public void PrintReport()
-    {
-        Console.WriteLine("RENTAL REPORT");
-
-        foreach (Rental r in _rentals)
-        {
-            Console.WriteLine($"Rental ID: {r.RentalId}");
-            Console.WriteLine($"User: {r.User.FName} {r.User.LName}");
-            Console.WriteLine($"Equipment: {r.Equipment.Name}");
-            Console.WriteLine($"Borrowed: {r.BorrowDate}");
-            Console.WriteLine($"Due: {r.DueDate}");
-            Console.WriteLine($"Returned: {r.ReturnDate}");
-            Console.WriteLine($"Late fee: {r.LateFee}");
-            Console.WriteLine("");
-        }
-    }
-    
-    public void PrintSummary()
-    {
-        Console.WriteLine("SUMMARY");
-
-        Console.WriteLine($"Total equipment: {_equipments.Count}");
-        Console.WriteLine($"Available: {_equipments.Count(e => e.IsAvailable)}");
-        Console.WriteLine($"Rented: {_equipments.Count(e => !e.IsAvailable)}");
-
-        Console.WriteLine($"Total users: {_users.Count}");
-        Console.WriteLine($"Active rentals: {_rentals.Count(r => r.ReturnDate == null)}");
-        Console.WriteLine($"Late rentals: {_rentals.Count(r => r.ReturnDate == null && r.DueDate < DateTime.Now)}");
-    }
 }
