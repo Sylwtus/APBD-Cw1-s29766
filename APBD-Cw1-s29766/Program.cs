@@ -14,7 +14,7 @@ class Program
 
         while (running)
         {
-            Console.WriteLine("\n===== MENU =====");
+            Console.WriteLine("\n******** MENU *********");
             Console.WriteLine("1. Add user");
             Console.WriteLine("2. Add equipment");
             Console.WriteLine("3. Show all equipment");
@@ -226,13 +226,31 @@ class Program
                         break;
 
                     case "9":
-                        Report report = new Report(
-                            equipmentService.GetAllEquipment(),
-                            userService.GetAllUsers(),
-                            rentalService.GetAllRentals()
-                        );
+                        Console.WriteLine("\n--- Users ---");
+                        foreach (var u in userService.GetAllUsers())
+                        {
+                            string userType = u.UserType.ToString();
+                            string details = u switch
+                            {
+                                Student s => $"StudentNumber: {s.StudentNumber}",
+                                Employee e => $"EmployeeNumber: {e.EmployeeNumber}, Department: {e.Department}",
+                                _ => ""
+                            };
+                            Console.WriteLine($"ID: {u.Id}, Name: {u.FName} {u.LName}, Type: {userType}, {details}");
+                        }
 
-                        report.PrintSummary();
+                        Console.WriteLine("\n--- Equipment ---");
+                        foreach (var eq in equipmentService.GetAllEquipment())
+                        {
+                            Console.WriteLine($"ID: {eq.Id}, Name: {eq.Name}, Available: {eq.IsAvailable}");
+                        }
+
+                        Console.WriteLine("\n--- Rentals ---");
+                        foreach (var r in rentalService.GetAllRentals())
+                        {
+                            string returned = r.ReturnDate.HasValue ? $"Returned on {r.ReturnDate.Value}" : "Not returned";
+                            Console.WriteLine($"Rental ID: {r.RentalId}, Equipment: {r.Equipment.Name}, User: {r.User.FName} {r.User.LName}, Due: {r.DueDate.ToShortDateString()}, {returned}");
+                        }
                         break;
 
                     case "0":
